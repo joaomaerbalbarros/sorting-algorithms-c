@@ -1,66 +1,68 @@
-# Algoritmos de ordenação em C: comparação de tempo médio
+# Sorting algorithms in C: average-time comparison
 
-Trabalho de Algoritmos e Estruturas de Dados (UFTM).
-Aluno: João Maerbal Nunes Barros.
+Assignment for the Algorithms and Data Structures course (UFTM).
+Author: João Maerbal Nunes Barros.
 
-O programa implementa cinco algoritmos de ordenação do zero, sem nenhuma biblioteca de ordenação, e compara o tempo médio de cada um em vetores de números aleatórios de **10.000, 30.000, 60.000 e 90.000** elementos. Cada tamanho é medido em **5 execuções**; o programa calcula a média, o log da média e gera um gráfico SVG.
+The program implements five sorting algorithms from scratch, without any sorting library, and compares the average time of each one on arrays of random integers with **10,000, 30,000, 60,000 and 90,000** elements. Every size is measured over **5 runs**; the program computes the mean, the log of the mean and generates an SVG plot.
 
-Vídeo de apresentação: https://www.youtube.com/watch?v=3vfH9RDy3Oo
+Presentation video (in Portuguese): https://www.youtube.com/watch?v=3vfH9RDy3Oo
 
-## Algoritmos
+## Algorithms
 
-| Algoritmo | Complexidade (caso médio) | Observação |
+| Algorithm | Complexity (average case) | Notes |
 |---|---|---|
-| QuickSort | O(n log n) | pivô no elemento do meio |
-| MergeSort | O(n log n) | usa vetor auxiliar alocado uma vez por ordenação |
-| InsertionSort | O(n²) | desloca em vez de trocar |
-| SelectionSort | O(n²) | no máximo uma troca por passada |
-| BubbleSort | O(n²) | para cedo se uma passada não fizer trocas |
+| QuickSort | O(n log n) | middle element as pivot |
+| MergeSort | O(n log n) | auxiliary array allocated once per sort |
+| InsertionSort | O(n²) | shifts instead of swapping |
+| SelectionSort | O(n²) | at most one swap per pass |
+| BubbleSort | O(n²) | stops early when a pass makes no swaps |
 
-## Como compilar e rodar
+## Build and run
 
 ```bash
 gcc ordenacao.c -o ordenacao -lm
 ./ordenacao
 ```
 
-O `-lm` é só para o `log10`. A execução completa leva alguns minutos, principalmente por causa do BubbleSort com 90.000 elementos.
+`-lm` is only needed for `log10`. A full run takes a few minutes, mostly because of BubbleSort on 90,000 elements.
 
-Ao terminar, o programa grava:
+When it finishes, the program writes:
 
-- `resultados.csv`: os tempos das 5 execuções, a média e o log da média (separador `;`);
-- `grafico.svg`: log do tempo médio por algoritmo, uma linha para cada tamanho.
+- `resultados.csv`: the times of all 5 runs, the mean and the log of the mean (`;`-separated);
+- `grafico.svg`: log of the average time per algorithm, one line per array size.
 
-## Metodologia
+## Methodology
 
-- Em cada execução, um vetor aleatório é gerado para cada tamanho, e **os cinco algoritmos ordenam cópias do mesmo vetor**.
-- O tempo é medido com `clock()` e registrado em unidades de **0,1 ms**, como no modelo da disciplina.
-- Depois de cada ordenação, o programa confere se o vetor ficou em ordem crescente.
+- In each run, one random array is generated per size, and **all five algorithms sort copies of the same array**.
+- Time is measured with `clock()` and stored in units of **0.1 ms**, following the course's reference model.
+- After every sort, the program checks that the array is in ascending order.
 
-## Resultados
+## Results
 
-Médias das 5 execuções (convertidas para milissegundos) do `resultados.csv` deste repositório:
+Averages over 5 runs (converted to milliseconds) from this repository's `resultados.csv`:
 
-| Algoritmo | n = 10.000 | n = 30.000 | n = 60.000 | n = 90.000 |
+| Algorithm | n = 10,000 | n = 30,000 | n = 60,000 | n = 90,000 |
 |---|---:|---:|---:|---:|
-| QuickSort | 1,03 ms | 3,24 ms | 7,13 ms | 11,34 ms |
-| MergeSort | 1,20 ms | 3,88 ms | 8,54 ms | 13,06 ms |
-| InsertionSort | 57,9 ms | 526 ms | 2.087 ms | 4.632 ms |
-| SelectionSort | 102 ms | 929 ms | 3.629 ms | 8.084 ms |
-| BubbleSort | 264 ms | 2.597 ms | 10.545 ms | 23.853 ms |
+| QuickSort | 1.03 ms | 3.24 ms | 7.13 ms | 11.34 ms |
+| MergeSort | 1.20 ms | 3.88 ms | 8.54 ms | 13.06 ms |
+| InsertionSort | 57.9 ms | 526 ms | 2,087 ms | 4,632 ms |
+| SelectionSort | 102 ms | 929 ms | 3,629 ms | 8,084 ms |
+| BubbleSort | 264 ms | 2,597 ms | 10,545 ms | 23,853 ms |
 
-![Log do tempo médio por algoritmo](grafico.svg)
+![Log of the average time per algorithm](grafico.svg)
 
-- A diferença entre O(n log n) e O(n²) cresce com n: com 10.000 elementos o InsertionSort leva cerca de 50 vezes o tempo do MergeSort; com 90.000, o BubbleSort leva cerca de 2.100 vezes o tempo do QuickSort.
-- Entre os O(n²), o InsertionSort é o mais rápido e o BubbleSort o mais lento: o Bubble faz uma troca (três atribuições) para cada par fora de ordem, enquanto o Insertion só desloca.
-- Triplicar n de 30.000 para 90.000 multiplica o tempo dos O(n²) por cerca de 9, como esperado para crescimento quadrático.
+- The gap between O(n log n) and O(n²) grows with n: at 10,000 elements InsertionSort takes about 50 times as long as MergeSort; at 90,000, BubbleSort takes about 2,100 times as long as QuickSort.
+- Among the O(n²) algorithms, InsertionSort is the fastest and BubbleSort the slowest: Bubble performs a swap (three assignments) for every out-of-order pair, while Insertion only shifts.
+- Tripling n from 30,000 to 90,000 multiplies the time of the O(n²) algorithms by about 9, as expected for quadratic growth.
 
-Os tempos absolutos dependem da máquina; os números acima vêm de uma rodada completa do programa (5 execuções) num único computador.
+Absolute times depend on the machine; the numbers above come from one full program run (5 runs) on a single computer.
 
-## Estrutura
+## Files
 
-| Arquivo | Conteúdo |
+Identifiers and code comments are in Portuguese.
+
+| File | Contents |
 |---|---|
-| `ordenacao.c` | os algoritmos, a medição e a geração do CSV e do gráfico |
-| `resultados.csv` | tempos medidos (unidade de 0,1 ms) |
-| `grafico.svg` | gráfico gerado pelo programa |
+| `ordenacao.c` | the algorithms, timing, CSV export and plot generation |
+| `resultados.csv` | measured times (units of 0.1 ms) |
+| `grafico.svg` | plot generated by the program |
